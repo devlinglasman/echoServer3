@@ -23,7 +23,7 @@ public class ServerTest {
     }
 
     @Test
-    public void serverReceivesAndEchoesBackClientMessage() throws IOException {
+    public void serverReceivesAndEchoesBackClientMessageToClientSocket() throws IOException {
         IOHelper stdIO = new IOHelper("");
         IOHelper socketIO = new IOHelper("Hello");
 
