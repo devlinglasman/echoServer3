@@ -21,7 +21,6 @@ public class ClientTest {
         client.receiveMessage();
 
         assertEquals(Message.clientConnected + "\n", stdOut.toString());
-
     }
 
 }

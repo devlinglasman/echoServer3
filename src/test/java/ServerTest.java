@@ -9,27 +9,27 @@ import static junit.framework.TestCase.assertEquals;
 
 public class ServerTest {
 
-    private InputStream stdIn = new ByteArrayInputStream("".getBytes());
-    private ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
-    private PrintStream stdPrint = new PrintStream(stdOut);
+    private InputStream stdIn;
+    private ByteArrayOutputStream stdOut;
+    private PrintStream stdPrint;
 
-    private InputStream dataIntoServerSocket = new ByteArrayInputStream("".getBytes());
+    private InputStream dataIntoServerSocket;
+    private String serverSocketMessageIn;
     private OutputStream dataOutOfServerSocket = new ByteArrayOutputStream();
 
-    private SocketStub socketStub = new SocketStub(dataIntoServerSocket, dataOutOfServerSocket);
-    private ServerSocketStub serverSocketStub = new ServerSocketStub(socketStub);
-    private Server server = new Server(stdIn, stdPrint, serverSocketStub);
+    private SocketStub socketStub;
+    private ServerSocketStub serverSocketStub;
+    private Server server;
 
     public ServerTest() throws IOException {
     }
 
-    @Before
-    public void setup() throws IOException {
-        stdIn = new ByteArrayInputStream("".getBytes());
+    public void setup(String stdInMessage, String clientSocketMessageIn) throws IOException {
+        stdIn = new ByteArrayInputStream(stdInMessage.getBytes());
         stdOut = new ByteArrayOutputStream();
         stdPrint = new PrintStream(stdOut);
 
-        dataIntoServerSocket = new ByteArrayInputStream("".getBytes());
+        dataIntoServerSocket = new ByteArrayInputStream(clientSocketMessageIn.getBytes());
         dataOutOfServerSocket = new ByteArrayOutputStream();
 
         socketStub = new SocketStub(dataIntoServerSocket, dataOutOfServerSocket);
@@ -39,7 +39,8 @@ public class ServerTest {
 
 
     @Test
-    public void serverAcceptsClient_printsToTerminal() {
+    public void serverAcceptsClient_printsToTerminal() throws IOException {
+        setup("","");
         server.start();
 
         assertEquals(Message.clientConnected + "\n", stdOut.toString());
@@ -47,8 +48,19 @@ public class ServerTest {
 
     @Test
     public void serverAcceptsClient_sendsConfirmationToClient() throws IOException {
+        setup("","");
         server.start();
 
         assertEquals(Message.clientConnected + "\n", server.getClientSocket().getOutputStream().toString());
+    }
+
+    @Test
+    public void serverReceivesAndPrintsClientMessage() throws IOException {
+        setup("","Hello");
+        server.start();
+
+        server.receiveClientMessage();
+
+        assertEquals(Message.clientConnected + "\nHello\n", stdOut.toString());
     }
 }

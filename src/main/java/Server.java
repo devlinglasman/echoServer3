@@ -1,6 +1,4 @@
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,6 +8,8 @@ public class Server {
     private PrintStream stdPrint;
     private ServerSocket serverSocket;
     private Socket clientSocket;
+    private BufferedReader dataReceivedInClientSocketReader;
+    private PrintStream dataSentOutThroughClientSocket;
 
     public Server(InputStream stdIn, PrintStream stdPrint, ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
@@ -20,10 +20,11 @@ public class Server {
     public void start() {
         try {
             clientSocket = serverSocket.accept();
+            dataReceivedInClientSocketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            dataSentOutThroughClientSocket = new PrintStream(clientSocket.getOutputStream());
 
             stdPrint.println(Message.clientConnected);
-            PrintStream clientSocketOutput = new PrintStream(clientSocket.getOutputStream());
-            clientSocketOutput.println(Message.clientConnected);
+            dataSentOutThroughClientSocket.println(Message.clientConnected);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,5 +32,10 @@ public class Server {
 
     public Socket getClientSocket() {
         return clientSocket;
+    }
+
+    public void receiveClientMessage() throws IOException {
+        String clientDataReceived = dataReceivedInClientSocketReader.readLine();
+        stdPrint.println(clientDataReceived);
     }
 }
