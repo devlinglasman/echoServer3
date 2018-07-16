@@ -28,4 +28,8 @@ public class Server {
             e.printStackTrace();
         }
     }
+
+    public Socket getClientSocket() {
+        return clientSocket;
+    }
 }
