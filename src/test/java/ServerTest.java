@@ -34,6 +34,6 @@ public class ServerTest {
 
         server.start();
 
-        assertEquals("Hello\n", socketIO.getOutput());
+        assertEquals(Message.clientSays("Devlin") + "Hello\n", socketIO.getOutput());
     }
 }

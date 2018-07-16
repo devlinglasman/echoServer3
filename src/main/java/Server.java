@@ -30,7 +30,7 @@ public class Server {
             String clientMessage;
             while ((clientMessage = receiveClientMessage()) != null) {
                 printToTerminal(Message.clientSays(clientUsername) + clientMessage);
-                printMessageToClient(clientMessage);
+                printMessageToClient(Message.clientSays(clientUsername) + clientMessage);
             }
 
 

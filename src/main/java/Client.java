@@ -51,7 +51,7 @@ public class Client {
     }
 
     public void printMessageFromSocket() throws IOException {
-        stdOut.println(Message.echoIntro + dataReceivedFromSocketReader.readLine());
+        stdOut.println(dataReceivedFromSocketReader.readLine());
     }
 
     private String retrieveMessageFromTerminal() throws IOException {
