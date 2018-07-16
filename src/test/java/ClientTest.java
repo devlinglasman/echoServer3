@@ -12,9 +12,7 @@ public class ClientTest {
         IOHelper socketIO = new IOHelper(Message.clientConnected);
 
         SocketStub socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
-        Client client = new Client(stdIO.getIn(), stdIO.getOut(), socketStub);
-
-        client.printMessageFromSocket();
+        new Client(stdIO.getIn(), stdIO.getOut(), socketStub);
 
         assertEquals(Message.clientConnected + "\n", stdIO.getOutput());
     }
@@ -25,10 +23,8 @@ public class ClientTest {
         IOHelper socketIO = new IOHelper("");
 
         SocketStub socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
-        Client client = new Client(stdIO.getIn(), stdIO.getOut(), socketStub);
+        new Client(stdIO.getIn(), stdIO.getOut(), socketStub);
 
-        client.writeMessageToSocket();
-
-        assertEquals("Hello\n", socketIO.getOutput());
+        assertEquals(Message.echoIntro + "Hello\n", socketIO.getOutput());
     }
 }

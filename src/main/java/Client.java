@@ -37,7 +37,7 @@ public class Client {
 
     public void writeMessageToSocket() throws IOException {
         String terminalInput = stdInReader.readLine();
-        dataSentToSocketPrinter.println(terminalInput);
+        dataSentToSocketPrinter.println(Message.echoIntro + terminalInput);
     }
 
     public void printMessageFromSocket() throws IOException {

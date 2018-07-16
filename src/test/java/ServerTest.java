@@ -33,6 +33,6 @@ public class ServerTest {
 
         server.start();
 
-        assertEquals(Message.clientConnected + "\n" + "Hello\n", socketIO.getOutput());
+        assertEquals("Hello\n", socketIO.getOutput());
     }
 }
