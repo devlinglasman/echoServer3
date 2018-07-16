@@ -23,19 +23,26 @@ public class Server {
             dataReceivedInClientSocketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             dataSentOutThroughClientSocket = new PrintStream(clientSocket.getOutputStream());
 
-            stdPrint.println(Message.clientConnected);
-            dataSentOutThroughClientSocket.println(Message.clientConnected);
+            printToTerminal(Message.clientConnected);
+
+            String clientMessage = receiveClientMessage();
+            printToTerminal(Message.messageFromClientIntro + clientMessage);
+            printMessageToClient(clientMessage);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Socket getClientSocket() {
-        return clientSocket;
+    public void printToTerminal(String message) {
+        stdPrint.println(message);
     }
 
-    public void receiveClientMessage() throws IOException {
-        String clientDataReceived = dataReceivedInClientSocketReader.readLine();
-        stdPrint.println(Message.messageFromClient + clientDataReceived);
+    public String receiveClientMessage() throws IOException {
+        return dataReceivedInClientSocketReader.readLine();
+    }
+
+    public void printMessageToClient(String message) {
+        dataSentOutThroughClientSocket.println(message);
     }
 }

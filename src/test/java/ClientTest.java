@@ -7,36 +7,28 @@ import static junit.framework.TestCase.assertEquals;
 public class ClientTest {
 
     @Test
-    public void receiveMessage() throws IOException {
-        InputStream stdIn = new ByteArrayInputStream("".getBytes());
-        ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
-        PrintStream stdPrint = new PrintStream(stdOut);
+    public void receiveMessageFromServerPrintToTerminal() throws IOException {
+        IOHelper stdIO = new IOHelper("");
+        IOHelper socketIO = new IOHelper(Message.clientConnected);
 
-        InputStream dataIntoSocket = new ByteArrayInputStream(Message.clientConnected.getBytes());
-        OutputStream dataOutOfSocket = new ByteArrayOutputStream();
-
-        SocketStub socketStub = new SocketStub(dataIntoSocket, dataOutOfSocket);
-        Client client = new Client(stdIn, stdPrint, socketStub);
+        SocketStub socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
+        Client client = new Client(stdIO.getIn(), stdIO.getOut(), socketStub);
 
         client.printMessageFromSocket();
 
-        assertEquals(Message.clientConnected + "\n", stdOut.toString());
+        assertEquals(Message.clientConnected + "\n", stdIO.getOutput());
     }
 
     @Test
     public void writeMessageToSocketFromTerminal() throws IOException {
-        InputStream stdIn = new ByteArrayInputStream("Hello".getBytes());
-        ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
-        PrintStream stdPrint = new PrintStream(stdOut);
+        IOHelper stdIO = new IOHelper("Hello");
+        IOHelper socketIO = new IOHelper("");
 
-        InputStream dataIntoSocket = new ByteArrayInputStream("".getBytes());
-        OutputStream dataOutOfSocket = new ByteArrayOutputStream();
-
-        SocketStub socketStub = new SocketStub(dataIntoSocket, dataOutOfSocket);
-        Client client = new Client(stdIn, stdPrint, socketStub);
+        SocketStub socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
+        Client client = new Client(stdIO.getIn(), stdIO.getOut(), socketStub);
 
         client.writeMessageToSocket();
 
-        assertEquals("Hello\n", socketStub.getOutputStream().toString());
+        assertEquals("Hello\n", socketIO.getOutput());
     }
 }

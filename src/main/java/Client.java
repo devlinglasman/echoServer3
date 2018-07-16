@@ -14,6 +14,16 @@ public class Client {
         this.stdPrint = stdPrint;
         this.socket = socket;
         connectSocket();
+        echo();
+    }
+
+    public void echo() {
+        try {
+            writeMessageToSocket();
+            printMessageFromSocket();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void connectSocket() {

@@ -1,63 +1,38 @@
-import com.sun.xml.internal.bind.v2.util.ByteArrayOutputStreamEx;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 import static junit.framework.TestCase.assertEquals;
 
 public class ServerTest {
 
-    private InputStream stdIn;
-    private ByteArrayOutputStream stdOut;
-    private PrintStream stdPrint;
-
-    private InputStream dataIntoServerSocket;
-    private String serverSocketMessageIn;
-    private OutputStream dataOutOfServerSocket = new ByteArrayOutputStream();
-
-    private SocketStub socketStub;
-    private ServerSocketStub serverSocketStub;
-    private Server server;
-
-    public void setup(String stdInMessage, String clientSocketMessageIn) throws IOException {
-        stdIn = new ByteArrayInputStream(stdInMessage.getBytes());
-        stdOut = new ByteArrayOutputStream();
-        stdPrint = new PrintStream(stdOut);
-
-        dataIntoServerSocket = new ByteArrayInputStream(clientSocketMessageIn.getBytes());
-        dataOutOfServerSocket = new ByteArrayOutputStream();
-
-        socketStub = new SocketStub(dataIntoServerSocket, dataOutOfServerSocket);
-        serverSocketStub = new ServerSocketStub(socketStub);
-        server = new Server(stdIn, stdPrint, serverSocketStub);
-    }
-
-
     @Test
-    public void serverAcceptsClient_printsToTerminal() throws IOException {
-        setup("","");
+    public void serverReceivesAndPrintsToTerminalClientMessage() throws IOException {
+        IOHelper stdIO = new IOHelper("");
+        IOHelper socketIO = new IOHelper("Hello");
+
+        Socket socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
+        ServerSocket serverSocketStub = new ServerSocketStub(socketStub);
+        Server server = new Server(stdIO.getIn(), stdIO.getOut(), serverSocketStub);
+
         server.start();
 
-        assertEquals(Message.clientConnected + "\n", stdOut.toString());
+        assertEquals(Message.clientConnected + "\n" + Message.messageFromClientIntro + "Hello\n", stdIO.getOutput());
     }
 
     @Test
-    public void serverAcceptsClient_sendsConfirmationToClient() throws IOException {
-        setup("","");
+    public void serverReceivesAndEchoesBackClientMessage() throws IOException {
+        IOHelper stdIO = new IOHelper("");
+        IOHelper socketIO = new IOHelper("Hello");
+
+        Socket socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
+        ServerSocket serverSocketStub = new ServerSocketStub(socketStub);
+        Server server = new Server(stdIO.getIn(), stdIO.getOut(), serverSocketStub);
+
         server.start();
 
-        assertEquals(Message.clientConnected + "\n", server.getClientSocket().getOutputStream().toString());
-    }
-
-    @Test
-    public void serverReceivesAndPrintsClientMessage() throws IOException {
-        setup("","Hello");
-        server.start();
-
-        server.receiveClientMessage();
-
-        assertEquals(Message.clientConnected + "\n" + Message.messageFromClient + "Hello\n", stdOut.toString());
+        assertEquals(Message.clientConnected + "\n" + "Hello\n", socketIO.getOutput());
     }
 }
