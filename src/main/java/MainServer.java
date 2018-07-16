@@ -1,15 +1,12 @@
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class MainServer {
 
-    public static void main(String[] args) {
-        InputStream dataIntoServerSocket = new ByteArrayInputStream("".getBytes());
-        OutputStream dataOutOfServerSocket = new ByteArrayOutputStream();
-
-        SocketStub socketStub = new SocketStub(dataIntoServerSocket, dataOutOfServerSocket);
-        ServerSocketStub serverSocketStub = new ServerSocketStub(socketStub);
-        Server server = new Server(stdIn, stdPrint, serverSocketStub);
-
+    public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket = new ServerSocket(6666);
+        Server server = new Server(System.in, System.out, serverSocket);
         server.start();
     }
 }

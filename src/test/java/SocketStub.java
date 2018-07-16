@@ -12,11 +12,13 @@ public class SocketStub extends Socket {
         this.output = output;
     }
 
-    public InputStream getInput() {
+    @Override
+    public InputStream getInputStream() {
         return input;
     }
 
-    public OutputStream getOutput() {
+    @Override
+    public OutputStream getOutputStream() {
         return output;
     }
 }
