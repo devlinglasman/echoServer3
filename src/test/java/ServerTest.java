@@ -21,9 +21,6 @@ public class ServerTest {
     private ServerSocketStub serverSocketStub;
     private Server server;
 
-    public ServerTest() throws IOException {
-    }
-
     public void setup(String stdInMessage, String clientSocketMessageIn) throws IOException {
         stdIn = new ByteArrayInputStream(stdInMessage.getBytes());
         stdOut = new ByteArrayOutputStream();
@@ -61,6 +58,6 @@ public class ServerTest {
 
         server.receiveClientMessage();
 
-        assertEquals(Message.clientConnected + "\nHello\n", stdOut.toString());
+        assertEquals(Message.clientConnected + "\n" + Message.messageFromClient + "Hello\n", stdOut.toString());
     }
 }

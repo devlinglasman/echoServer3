@@ -3,23 +3,34 @@ import java.net.Socket;
 
 public class Client {
 
-    private InputStream stdIn;
+    private BufferedReader stdInReader;
     private PrintStream stdPrint;
     private Socket socket;
+    private BufferedReader dataReceivedFromSocketReader;
+    private PrintStream dataSentToSocketPrinter;
 
     public Client(InputStream stdIn, PrintStream stdPrint, Socket socket) {
-        this.stdIn = stdIn;
+        stdInReader = new BufferedReader(new InputStreamReader(stdIn));
         this.stdPrint = stdPrint;
         this.socket = socket;
+        connectSocket();
     }
 
-    public void receiveMessage() {
+    public void connectSocket() {
         try {
-            InputStream dataReceivedFromSocket = socket.getInputStream();
-            BufferedReader dataReceivedReader = new BufferedReader(new InputStreamReader(dataReceivedFromSocket));
-            stdPrint.println(dataReceivedReader.readLine());
+            dataReceivedFromSocketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            dataSentToSocketPrinter = new PrintStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void writeMessageToSocket() throws IOException {
+        String terminalInput = stdInReader.readLine();
+        dataSentToSocketPrinter.println(terminalInput);
+    }
+
+    public void printMessageFromSocket() throws IOException {
+        stdPrint.println(dataReceivedFromSocketReader.readLine());
     }
 }

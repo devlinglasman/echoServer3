@@ -36,6 +36,6 @@ public class Server {
 
     public void receiveClientMessage() throws IOException {
         String clientDataReceived = dataReceivedInClientSocketReader.readLine();
-        stdPrint.println(clientDataReceived);
+        stdPrint.println(Message.messageFromClient + clientDataReceived);
     }
 }

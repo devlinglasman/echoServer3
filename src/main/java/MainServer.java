@@ -8,5 +8,6 @@ public class MainServer {
         ServerSocket serverSocket = new ServerSocket(6666);
         Server server = new Server(System.in, System.out, serverSocket);
         server.start();
+        server.receiveClientMessage();
     }
 }
