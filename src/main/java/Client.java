@@ -4,17 +4,29 @@ import java.net.Socket;
 public class Client {
 
     private BufferedReader stdInReader;
-    private PrintStream stdPrint;
+    private PrintStream stdOut;
     private Socket socket;
     private BufferedReader dataReceivedFromSocketReader;
     private PrintStream dataSentToSocketPrinter;
+    private String username;
 
-    public Client(InputStream stdIn, PrintStream stdPrint, Socket socket) {
+    public Client(InputStream stdIn, PrintStream stdOut, Socket socket) throws IOException {
         stdInReader = new BufferedReader(new InputStreamReader(stdIn));
-        this.stdPrint = stdPrint;
+        this.stdOut = stdOut;
         this.socket = socket;
         connectSocket();
+        setUsername();
         startEchoing();
+    }
+
+    public void connectSocket() {
+        try {
+            dataReceivedFromSocketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            dataSentToSocketPrinter = new PrintStream(socket.getOutputStream());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void startEchoing() {
@@ -24,20 +36,11 @@ public class Client {
                 writeMessageToSocket(message);
                 printMessageFromSocket();
 
-                if (message.equals("Bye")) {
+                if (message.equals("bye")) {
                     break;
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void connectSocket() {
-        try {
-            dataReceivedFromSocketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            dataSentToSocketPrinter = new PrintStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,10 +51,16 @@ public class Client {
     }
 
     public void printMessageFromSocket() throws IOException {
-        stdPrint.println(Message.echoIntro + dataReceivedFromSocketReader.readLine());
+        stdOut.println(Message.echoIntro + dataReceivedFromSocketReader.readLine());
     }
 
     private String retrieveMessageFromTerminal() throws IOException {
         return stdInReader.readLine();
+    }
+
+    private void setUsername() throws IOException {
+        stdOut.println(Message.askUserName);
+        username = retrieveMessageFromTerminal();
+        writeMessageToSocket(username);
     }
 }
