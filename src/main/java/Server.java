@@ -25,9 +25,12 @@ public class Server {
 
             printToTerminal(Message.clientConnected);
 
-            String clientMessage = receiveClientMessage();
-            printToTerminal(Message.messageFromClientIntro + clientMessage);
-            printMessageToClient(clientMessage);
+            String clientMessage;
+            while ((clientMessage = receiveClientMessage()) != null) {
+                printToTerminal(Message.messageFromClientIntro + clientMessage);
+                printMessageToClient(clientMessage);
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -14,13 +14,21 @@ public class Client {
         this.stdPrint = stdPrint;
         this.socket = socket;
         connectSocket();
-        echo();
+        startEchoing();
     }
 
-    public void echo() {
+    public void startEchoing() {
         try {
-            writeMessageToSocket();
-            printMessageFromSocket();
+            String message;
+            while ((message = retrieveMessageFromTerminal()) != null) {
+                writeMessageToSocket(message);
+                printMessageFromSocket();
+
+                if (message.equals("Bye")) {
+                    break;
+                }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,12 +43,15 @@ public class Client {
         }
     }
 
-    public void writeMessageToSocket() throws IOException {
-        String terminalInput = stdInReader.readLine();
-        dataSentToSocketPrinter.println(terminalInput);
+    public void writeMessageToSocket(String message) {
+        dataSentToSocketPrinter.println(message);
     }
 
     public void printMessageFromSocket() throws IOException {
         stdPrint.println(Message.echoIntro + dataReceivedFromSocketReader.readLine());
+    }
+
+    private String retrieveMessageFromTerminal() throws IOException {
+        return stdInReader.readLine();
     }
 }
