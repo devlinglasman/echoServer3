@@ -9,9 +9,9 @@ import static junit.framework.TestCase.assertEquals;
 public class ServerTest {
 
     @Test
-    public void serverReceivesAndPrintsToTerminalClientMessage() throws IOException {
+    public void serverReceivesUsernameAndClientMessageAndPrintsToTerminal() throws IOException {
         IOHelper stdIO = new IOHelper("");
-        IOHelper socketIO = new IOHelper("Hello");
+        IOHelper socketIO = new IOHelper("Devlin\nHello");
 
         Socket socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
         ServerSocket serverSocketStub = new ServerSocketStub(socketStub);
@@ -19,13 +19,14 @@ public class ServerTest {
 
         server.start();
 
-        assertEquals(Message.clientConnected + "\n" + Message.messageFromClientIntro + "Hello\n", stdIO.getOutput());
+        assertEquals(Message.clientConnected("Devlin") + "\n" +
+                Message.clientSays("Devlin") + "Hello\n", stdIO.getOutput());
     }
 
     @Test
-    public void serverReceivesAndEchoesBackClientMessageToClientSocket() throws IOException {
+    public void serverReceivesAndEchoesBackClientMessageToClientSocketAfterUsername() throws IOException {
         IOHelper stdIO = new IOHelper("");
-        IOHelper socketIO = new IOHelper("Hello");
+        IOHelper socketIO = new IOHelper("Devlin\nHello");
 
         Socket socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
         ServerSocket serverSocketStub = new ServerSocketStub(socketStub);
@@ -33,6 +34,6 @@ public class ServerTest {
 
         server.start();
 
-        assertEquals("Hello\n", socketIO.getOutput());
+        assertEquals(Message.clientSays("Devlin") + "Hello\n", socketIO.getOutput());
     }
 }

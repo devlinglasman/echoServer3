@@ -8,6 +8,7 @@ public class Server {
     private PrintStream stdPrint;
     private ServerSocket serverSocket;
     private Socket clientSocket;
+    private String clientUsername;
     private BufferedReader dataReceivedInClientSocketReader;
     private PrintStream dataSentOutThroughClientSocket;
 
@@ -23,11 +24,15 @@ public class Server {
             dataReceivedInClientSocketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             dataSentOutThroughClientSocket = new PrintStream(clientSocket.getOutputStream());
 
-            printToTerminal(Message.clientConnected);
+            clientUsername = receiveClientMessage();
+            printToTerminal(Message.clientConnected(clientUsername));
 
-            String clientMessage = receiveClientMessage();
-            printToTerminal(Message.messageFromClientIntro + clientMessage);
-            printMessageToClient(clientMessage);
+            String clientMessage;
+            while ((clientMessage = receiveClientMessage()) != null) {
+                printToTerminal(Message.clientSays(clientUsername) + clientMessage);
+                printMessageToClient(Message.clientSays(clientUsername) + clientMessage);
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();
