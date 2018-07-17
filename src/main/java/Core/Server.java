@@ -1,3 +1,7 @@
+package Core;
+
+import Core.Message;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -34,7 +38,8 @@ public class Server {
 
     public void broadcastMessage(String message) throws IOException {
         for (Socket clientSocket : clients) {
-            new PrintStream(clientSocket.getOutputStream()).println(message);
+            new PrintStream(clientSocket.getOutputStream())
+                    .println(Message.echoIntro + message);
         }
     }
 

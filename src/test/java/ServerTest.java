@@ -1,3 +1,5 @@
+import Core.Message;
+import Core.Server;
 import org.junit.Test;
 
 import java.io.*;
@@ -61,9 +63,9 @@ public class ServerTest {
 //
 //        ServerSocket serverSocketStub = new ServerSocketStub(clientSockets);
 //        IOHelper stdIO = new IOHelper("");
-//        new Server(stdIO.getOut(), serverSocketStub);
+//        new Core.Server(stdIO.getOut(), serverSocketStub);
 //
-//        assertEquals(Message.clientConnected() + "\n"
-//                + Message.clientConnected() + "\n", stdIO.getOutput());
+//        assertEquals(Core.Message.clientConnected() + "\n"
+//                + Core.Message.clientConnected() + "\n", stdIO.getOutput());
 //    }
 }

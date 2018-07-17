@@ -1,3 +1,4 @@
+import Core.Client;
 import org.junit.Test;
 
 import java.io.*;

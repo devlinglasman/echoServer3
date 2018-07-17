@@ -1,3 +1,7 @@
+package Core.Mains;
+
+import Core.Client;
+
 import java.io.*;
 import java.net.Socket;
 

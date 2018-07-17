@@ -1,3 +1,5 @@
+package Core;
+
 public class Message {
 
     public static String clientConnected() {
@@ -5,7 +7,7 @@ public class Message {
     }
 
     public static String clientSays() {
-        return "Message from " + ": ";
+        return "Core.Message from " + ": ";
     }
 
     public static final String echoIntro =

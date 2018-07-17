@@ -1,3 +1,5 @@
+package Core;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -27,8 +29,8 @@ public class Client {
     public void startEchoing() {
         try {
             String message;
-            while ((message = retrieveMessageFromTerminal()) != null) {
-                writeMessageToSocket(message);
+            while ((message = stdInReader.readLine()) != null) {
+                dataSentToSocketPrinter.println(message);
 
                 if (message.equals("bye")) {
                     messageListener.stopRunning();
@@ -39,14 +41,6 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void writeMessageToSocket(String message) {
-        dataSentToSocketPrinter.println(message);
-    }
-
-    private String retrieveMessageFromTerminal() throws IOException {
-        return stdInReader.readLine();
     }
 
 }
