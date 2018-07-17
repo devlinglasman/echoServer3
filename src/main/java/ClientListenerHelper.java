@@ -6,10 +6,12 @@ public class ClientListenerHelper implements Runnable {
 
     private PrintStream stdOut;
     private BufferedReader socketData;
+    private boolean stop;
 
     public ClientListenerHelper(PrintStream stdOut, BufferedReader socketData) {
         this.stdOut = stdOut;
         this.socketData = socketData;
+        this.stop = false;
     }
 
     public void run() {
@@ -22,8 +24,12 @@ public class ClientListenerHelper implements Runnable {
 
     public void printMessages() throws IOException {
         String message;
-        while ((message = socketData.readLine()) != null) {
+        while (((message = socketData.readLine()) != null) && (!stop)) {
             stdOut.println(message);
         }
+    }
+
+    public void stopRunning() {
+        stop = true;
     }
 }

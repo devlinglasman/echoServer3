@@ -6,6 +6,6 @@ public class MainServer {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(6666);
-        Server server = new Server(System.out, serverSocket);
+        new Server(System.out, serverSocket);
     }
 }

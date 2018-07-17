@@ -11,13 +11,13 @@ public class ClientListenerHelperTest {
     @Test
     public void writeMessagesFromSocketToTerminal() throws IOException {
         IOHelper stdIO = new IOHelper("");
-        IOHelper socketIO = new IOHelper("Hello\nbye");
+        IOHelper socketIO = new IOHelper("Hello");
         BufferedReader socketReader = new BufferedReader(new InputStreamReader(socketIO.getIn()));
 
         ClientListenerHelper clientListenerHelper = new ClientListenerHelper(stdIO.getOut(), socketReader);
 
         clientListenerHelper.printMessages();
 
-        assertEquals( "Hello\n" + "bye\n", stdIO.getOutput());
+        assertEquals( "Hello\n", stdIO.getOutput());
     }
 }
