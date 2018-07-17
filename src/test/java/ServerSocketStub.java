@@ -1,17 +1,22 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 public class ServerSocketStub extends ServerSocket {
 
-    private Socket socket;
+    private List<Socket> clientSockets;
+    private int clientCounter;
 
-    public ServerSocketStub(Socket socket) throws IOException {
-        this.socket = socket;
+    public ServerSocketStub(List<Socket> clientSockets) throws IOException {
+        this.clientSockets = clientSockets;
+        clientCounter = 0;
     }
 
     @Override
     public Socket accept() {
+        Socket socket = clientSockets.get(clientCounter);
+        clientCounter++;
         return socket;
     }
 }

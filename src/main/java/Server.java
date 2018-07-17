@@ -1,40 +1,41 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Server {
 
-    private PrintStream stdPrint;
+    private PrintStream stdOut;
     private ServerSocket serverSocket;
+    private List<Socket> clients;
 
-    public Server(PrintStream stdPrint, ServerSocket serverSocket) {
+    public Server(PrintStream stdOut, ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
-        this.stdPrint = stdPrint;
-        start();
+        this.stdOut = stdOut;
+        clients = new ArrayList<>();
     }
 
     public void start() {
         try {
-            Socket clientSocket = serverSocket.accept();
-            broadcastMessages(clientSocket);
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                stdOut.println(Message.clientConnected());
+
+                ServerListener serverListener = new ServerListener(this, clientSocket);
+                new Thread(serverListener).start();
+                clients.add(clientSocket);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public void broadcastMessages(Socket clientSocket) throws IOException {
-        BufferedReader dataReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        PrintStream dataWriter = new PrintStream(clientSocket.getOutputStream());
-        String clientMessage;
-        while ((clientMessage = dataReader.readLine()) != null) {
-            dataWriter.println(clientMessage);
-            printToTerminal(clientMessage);
+    public void broadcastMessage(String message) throws IOException {
+        for (Socket clientSocket : clients) {
+            new PrintStream(clientSocket.getOutputStream()).println(message);
         }
     }
 
-    public void printToTerminal(String message) {
-        stdPrint.println(message);
-    }
 }

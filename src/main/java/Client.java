@@ -3,24 +3,25 @@ import java.net.Socket;
 
 public class Client {
 
+    private Socket socket;
     private BufferedReader stdInReader;
     private PrintStream stdOut;
-    private BufferedReader dataReceivedFromSocketReader;
     private PrintStream dataSentToSocketPrinter;
-    private ClientListenerHelper clientListenerHelper;
+    private MessageListener messageListener;
 
     public Client(InputStream stdIn, PrintStream stdOut, Socket socket) throws IOException {
         stdInReader = new BufferedReader(new InputStreamReader(stdIn));
         this.stdOut = stdOut;
-        dataReceivedFromSocketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         dataSentToSocketPrinter = new PrintStream(socket.getOutputStream());
+        this.socket = socket;
         startListening();
         startEchoing();
     }
 
-    private void startListening() {
-        clientListenerHelper = new ClientListenerHelper(stdOut, dataReceivedFromSocketReader);
-        new Thread(clientListenerHelper).start();
+    private void startListening() throws IOException {
+        messageListener = new MessageListener(socket.getInputStream(),
+                new PrintStream(stdOut));
+        new Thread(messageListener).start();
     }
 
     public void startEchoing() {
@@ -28,8 +29,9 @@ public class Client {
             String message;
             while ((message = retrieveMessageFromTerminal()) != null) {
                 writeMessageToSocket(message);
+
                 if (message.equals("bye")) {
-                    clientListenerHelper.stopRunning();
+                    messageListener.stopRunning();
                     break;
                 }
             }
