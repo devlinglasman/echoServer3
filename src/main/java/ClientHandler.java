@@ -10,14 +10,17 @@ public class ClientHandler implements Runnable {
     private PrintStream stdPrint;
     private BufferedReader dataReceivedInClientSocketReader;
     private PrintStream dataSentOutThroughClientSocket;
+    private Server server;
 
-    public ClientHandler(Socket socket) throws IOException {
+    public ClientHandler(Server server, Socket socket) throws IOException {
+        this.server = server;
         this.socket = socket;
         dataReceivedInClientSocketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         dataSentOutThroughClientSocket = new PrintStream(socket.getOutputStream());
     }
 
     public void run() {
+        server.addClient(socket);
         try {
             runClientMechanics();
         } catch (IOException e) {
@@ -28,25 +31,13 @@ public class ClientHandler implements Runnable {
     public void runClientMechanics() throws IOException {
         String clientMessage;
         while ((clientMessage = receiveClientMessage()) != null) {
-            broadcastMessage(clientMessage);
-
+            server.broadcastMessage(clientMessage);
         }
     }
-
-    public void broadcastMessage(String clientMessage) throws IOException {
-        printMessageToAllClients(Message.clientSays() + clientMessage);
-    }
-
-//    public void printToTerminal(String message) {
-//        stdPrint.println(message);
-//    }
 
     public String receiveClientMessage() throws IOException {
         return dataReceivedInClientSocketReader.readLine();
     }
 
-    public void printMessageToAllClients(String message) throws IOException {
-            dataSentOutThroughClientSocket.println(message);
-        }
 
 }

@@ -26,14 +26,33 @@ public class Server implements Runnable {
 
     public void start() {
         try {
-            Socket clientSocket = serverSocket.accept();
-            stdPrint.println("Connected.");
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
 
-            ClientHandler clientHandler = new ClientHandler(clientSocket);
-            new Thread(clientHandler).start();
+                ClientHandler clientHandler = new ClientHandler(this, clientSocket);
+                Thread thread = new Thread(clientHandler);
+                thread.start();
+
+                stdPrint.println(thread.getName() + "Connected.");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void addClient(Socket socket) {
+        clients.add(socket);
+    }
+
+    public void broadcastMessage(String message) {
+        for (Socket client : clients) {
+            try {
+                PrintStream writer = new PrintStream(client.getOutputStream());
+                writer.println(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
