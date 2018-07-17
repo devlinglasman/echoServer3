@@ -26,52 +26,15 @@ public class Server implements Runnable {
 
     public void start() {
         try {
-            clients.add(serverSocket.accept());
+            Socket clientSocket = serverSocket.accept();
             stdPrint.println("Connected.");
-            runClientMechanics();
+
+            ClientHandler clientHandler = new ClientHandler(clientSocket);
+            new Thread(clientHandler).start();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void runClientMechanics() throws IOException {
-        for (Socket client : clients) {
-
-            dataReceivedInClientSocketReader = setReader(client.getInputStream());
-            dataSentOutThroughClientSocket = setOut(client.getOutputStream());
-
-            String clientMessage;
-            while ((clientMessage = receiveClientMessage()) != null) {
-                broadcastMessage(clientMessage);
-            }
-        }
-    }
-
-    public void broadcastMessage(String clientMessage) throws IOException {
-        printToTerminal(Message.clientSays() + clientMessage);
-        printMessageToAllClients(Message.clientSays() + clientMessage);
-    }
-
-    public void printToTerminal(String message) {
-        stdPrint.println(message);
-    }
-
-    public String receiveClientMessage() throws IOException {
-        return dataReceivedInClientSocketReader.readLine();
-    }
-
-    public void printMessageToAllClients(String message) throws IOException {
-        for (Socket client : clients) {
-            new PrintStream(setOut(client.getOutputStream())).println(message);
-        }
-    }
-
-    private BufferedReader setReader(InputStream in) {
-        return new BufferedReader(new InputStreamReader(in));
-    }
-
-    private PrintStream setOut(OutputStream out) {
-        return new PrintStream(out);
-    }
 }
