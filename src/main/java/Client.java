@@ -8,25 +8,21 @@ public class Client {
     private Socket socket;
     private BufferedReader dataReceivedFromSocketReader;
     private PrintStream dataSentToSocketPrinter;
-    private String username;
 
     public Client(InputStream stdIn, PrintStream stdOut, Socket socket) throws IOException {
         stdInReader = new BufferedReader(new InputStreamReader(stdIn));
         this.stdOut = stdOut;
         this.socket = socket;
-        connectSocket();
-        setUsername();
+        dataReceivedFromSocketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        dataSentToSocketPrinter = new PrintStream(socket.getOutputStream());
+        startListening();
         startEchoing();
     }
 
-    public void connectSocket() {
-        try {
-            dataReceivedFromSocketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            dataSentToSocketPrinter = new PrintStream(socket.getOutputStream());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void startListening() {
+        Runnable clientListenerHelper = new ClientListenerHelper(stdOut, dataReceivedFromSocketReader);
+        Thread listeningThread = new Thread(clientListenerHelper);
+        listeningThread.start();
     }
 
     public void startEchoing() {
@@ -34,7 +30,6 @@ public class Client {
             String message;
             while ((message = retrieveMessageFromTerminal()) != null) {
                 writeMessageToSocket(message);
-                printMessageFromSocket();
 
                 if (message.equals("bye")) {
                     break;
@@ -50,17 +45,8 @@ public class Client {
         dataSentToSocketPrinter.println(message);
     }
 
-    public void printMessageFromSocket() throws IOException {
-        stdOut.println(dataReceivedFromSocketReader.readLine());
-    }
-
     private String retrieveMessageFromTerminal() throws IOException {
         return stdInReader.readLine();
     }
 
-    private void setUsername() throws IOException {
-        stdOut.println(Message.askUserName);
-        username = retrieveMessageFromTerminal();
-        writeMessageToSocket(username);
-    }
 }
