@@ -8,15 +8,13 @@ public class Client {
     private Socket socket;
     private BufferedReader dataReceivedFromSocketReader;
     private PrintStream dataSentToSocketPrinter;
-    private String username;
 
     public Client(InputStream stdIn, PrintStream stdOut, Socket socket) throws IOException {
         stdInReader = new BufferedReader(new InputStreamReader(stdIn));
         this.stdOut = stdOut;
         this.socket = socket;
         connectSocket();
-        setUsername();
-        startEchoing();
+        sendMessages();
     }
 
     public void connectSocket() {
@@ -24,17 +22,19 @@ public class Client {
             dataReceivedFromSocketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             dataSentToSocketPrinter = new PrintStream(socket.getOutputStream());
 
+            ReceivedMessagesListener clientListener = new ReceivedMessagesListener(dataReceivedFromSocketReader, stdOut);
+            new Thread(clientListener).start();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void startEchoing() {
+    public void sendMessages() {
         try {
             String message;
             while ((message = retrieveMessageFromTerminal()) != null) {
                 writeMessageToSocket(message);
-                printMessageFromSocket();
 
                 if (message.equals("bye")) {
                     break;
@@ -46,21 +46,13 @@ public class Client {
         }
     }
 
+
     public void writeMessageToSocket(String message) {
         dataSentToSocketPrinter.println(message);
-    }
-
-    public void printMessageFromSocket() throws IOException {
-        stdOut.println(dataReceivedFromSocketReader.readLine());
     }
 
     private String retrieveMessageFromTerminal() throws IOException {
         return stdInReader.readLine();
     }
 
-    private void setUsername() throws IOException {
-        stdOut.println(Message.askUserName);
-        username = retrieveMessageFromTerminal();
-        writeMessageToSocket(username);
-    }
 }

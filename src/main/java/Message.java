@@ -1,15 +1,12 @@
 public class Message {
 
-    public static String clientConnected(String username) {
-        return username + " connected.";
+    public static String clientConnected() {
+        return " connected.";
     }
 
-    public static String clientSays(String username) {
-        return "Message from " + username + ": ";
+    public static String clientSays() {
+        return "Message: ";
     }
-
-    public static final String echoIntro =
-            "Echo: ";
 
     public static final String askUserName =
             "Hi there! Please enter a username below and then start chatting. " +
