@@ -16,17 +16,17 @@ public class ServerListener implements Runnable {
     }
 
     public void run() {
-        try {
-            broadcastMessages();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            broadcastMessages();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    public void broadcastMessages() throws IOException {
-        String message;
-        while ((message = reader.readLine()) != null) {
-            server.broadcastMessage(message);
-        }
-    }
+//    public void broadcastMessages() throws IOException {
+//        String message;
+//        while ((message = reader.readLine()) != null) {
+//            server.broadcastMessage(message);
+//        }
+//    }
 }

@@ -37,11 +37,4 @@ public class Server {
         }
     }
 
-    public void broadcastMessage(String message) throws IOException {
-        for (Socket clientSocket : clients) {
-            new PrintStream(clientSocket.getOutputStream())
-                    .println(Message.echoIntro + message);
-        }
-    }
-
 }
