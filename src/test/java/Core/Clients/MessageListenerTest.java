@@ -1,4 +1,7 @@
-import Core.MessageListener;
+package Core.Clients;
+
+import Core.IOHelper;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -16,7 +19,7 @@ public class MessageListenerTest {
 
         messageListener.printMessages();
 
-        assertEquals( "Hello\n", stdIO.getOutput());
+        TestCase.assertEquals( "Hello\n", stdIO.getOutput());
     }
 
     @Test
@@ -29,6 +32,6 @@ public class MessageListenerTest {
 
         messageListener.printMessages();
 
-        assertEquals( "", stdIO.getOutput());
+        TestCase.assertEquals( "", stdIO.getOutput());
     }
 }

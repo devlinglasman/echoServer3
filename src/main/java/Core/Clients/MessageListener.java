@@ -1,4 +1,4 @@
-package Core;
+package Core.Clients;
 
 import java.io.*;
 

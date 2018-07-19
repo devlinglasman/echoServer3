@@ -1,19 +1,21 @@
+package Core;
+
 import java.io.*;
 
 public class IOHelper {
 
     private InputStream in;
-    private OutputStream out;
-    private PrintStream print;
+    private OutputStream outputStream;
+    private PrintStream out;
 
     public IOHelper(String dataInput) {
         in = new ByteArrayInputStream(dataInput.getBytes());
-        out = new ByteArrayOutputStream();
-        print = new PrintStream(out);
+        outputStream = new ByteArrayOutputStream();
+        out = new PrintStream(outputStream);
     }
 
     public String getOutput() {
-        return out.toString();
+        return outputStream.toString();
     }
 
     public InputStream getIn() {
@@ -21,6 +23,6 @@ public class IOHelper {
     }
 
     public PrintStream getOut() {
-        return print;
+        return out;
     }
 }

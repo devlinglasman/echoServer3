@@ -1,5 +1,9 @@
+package Core.Servers;
+
+import Core.IOHelper;
 import Core.Message;
 import Core.Server;
+import Core.SocketStub;
 import org.junit.Test;
 
 import java.io.*;
@@ -13,31 +17,31 @@ public class ServerTest {
 
     @Test
     public void serverReceivesClientMessageAndPrintsToTerminal() throws IOException {
-        IOHelper stdIOclient1 = new IOHelper("");
+        IOHelper stdIO = new IOHelper("");
         IOHelper socketIOclient1 = new IOHelper("Hello");
 
         Socket clientSocket1 = new SocketStub(socketIOclient1.getIn(), socketIOclient1.getOut());
         ServerSocket serverSocketStub = new ServerSocketStub(Arrays.asList(clientSocket1));
-        new Server(stdIOclient1.getOut(), serverSocketStub);
+        new Server(stdIO.getOut(), serverSocketStub, new ServerStatusStub(1));
 
-        assertEquals(Message.clientConnected() + "\n" + "Hello\n", stdIOclient1.getOutput());
+        assertEquals(Message.clientConnected() + "\n", stdIO.getOutput());
     }
 
     @Test
     public void serverReceivesAndEchoesBackClientMessageToClientSocket() throws IOException {
-        IOHelper stdIOclient1 = new IOHelper("");
+        IOHelper stdIO = new IOHelper("");
         IOHelper socketIOclient1 = new IOHelper("Hello");
 
         Socket clientSocket1 = new SocketStub(socketIOclient1.getIn(), socketIOclient1.getOut());
         ServerSocket serverSocketStub = new ServerSocketStub(Arrays.asList(clientSocket1));
-        new Server(stdIOclient1.getOut(), serverSocketStub);
+        new Server(stdIO.getOut(), serverSocketStub, new ServerStatusStub(1));
 
         assertEquals("Hello\n", socketIOclient1.getOutput());
     }
 
     @Test
     public void addClient() throws IOException {
-        IOHelper stdIOclient1 = new IOHelper("");
+        IOHelper stdIO = new IOHelper("");
         IOHelper socketIOclient1 = new IOHelper("");
 
         IOHelper stdIOclient2 = new IOHelper("");
@@ -45,7 +49,7 @@ public class ServerTest {
 
         Socket clientSocket1 = new SocketStub(socketIOclient2.getIn(), socketIOclient2.getOut());
         ServerSocket serverSocketStub = new ServerSocketStub(Arrays.asList(clientSocket1));
-        Server server = new Server(stdIOclient2.getOut(), serverSocketStub);
+        new Server(stdIO.getOut(), serverSocketStub, new ServerStatusStub(1));
 
 
 
@@ -53,17 +57,18 @@ public class ServerTest {
     }
 //    @Test
 //    public void serverAcceptsTwoClients() throws IOException {
-//        IOHelper socketIOclient1 = new IOHelper("");
-//        Socket clientSocket1 = new SocketStub(socketIOclient1.getIn(), socketIOclient1.getOut());
+//        Core.IOHelper socketIOclient1 = new Core.IOHelper("");
+//        Socket clientSocket1 = new Core.SocketStub(socketIOclient1.getIn(), socketIOclient1.getOut());
 //
-//        IOHelper socketIOclient2 = new IOHelper("");
-//        Socket clientSocket2 = new SocketStub(socketIOclient2.getIn(), socketIOclient2.getOut());
+//        Core.IOHelper socketIOclient2 = new Core.IOHelper("");
+//        Socket clientSocket2 = new Core.SocketStub(socketIOclient2.getIn(), socketIOclient2.getOut());
 //
 //        List<Socket> clientSockets = Arrays.asList(clientSocket1, clientSocket2);
 //
 //        ServerSocket serverSocketStub = new ServerSocketStub(clientSockets);
-//        IOHelper stdIO = new IOHelper("");
+//        Core.IOHelper stdIO = new Core.IOHelper("");
 //        new Core.Server(stdIO.getOut(), serverSocketStub);
+//        new Server(stdIOclient1.getOut(), serverSocketStub, new ServerStatusStub(1));
 //
 //        assertEquals(Core.Message.clientConnected() + "\n"
 //                + Core.Message.clientConnected() + "\n", stdIO.getOutput());

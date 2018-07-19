@@ -7,7 +7,7 @@ public class Message {
     }
 
     public static String clientSays() {
-        return "Core.Message from " + ": ";
+        return "Message from: ";
     }
 
     public static final String echoIntro =

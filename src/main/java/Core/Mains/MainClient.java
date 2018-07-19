@@ -1,6 +1,6 @@
 package Core.Mains;
 
-import Core.Client;
+import Core.Clients.Client;
 
 import java.io.*;
 import java.net.Socket;

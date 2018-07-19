@@ -1,7 +1,5 @@
 package Core;
 
-import Core.Message;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,16 +11,19 @@ public class Server {
     private PrintStream stdOut;
     private ServerSocket serverSocket;
     private List<Socket> clients;
+    private ServerStatus serverStatus;
 
-    public Server(PrintStream stdOut, ServerSocket serverSocket) {
+    public Server(PrintStream stdOut, ServerSocket serverSocket, ServerStatus serverStatus) {
         this.serverSocket = serverSocket;
         this.stdOut = stdOut;
+        this.serverStatus = serverStatus;
         clients = new ArrayList<>();
+        start();
     }
 
     public void start() {
         try {
-            while (true) {
+            while (serverStatus.isRunning()) {
                 Socket clientSocket = serverSocket.accept();
                 stdOut.println(Message.clientConnected());
 

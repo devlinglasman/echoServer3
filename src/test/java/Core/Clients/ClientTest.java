@@ -1,4 +1,8 @@
-import Core.Client;
+package Core.Clients;
+
+import Core.IOHelper;
+import Core.SocketStub;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.io.*;
@@ -15,7 +19,6 @@ public class ClientTest {
         SocketStub socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
         new Client(stdIO.getIn(), stdIO.getOut(), socketStub);
 
-        assertEquals( "Hello\n", socketIO.getOutput());
+        TestCase.assertEquals( "Hello\n", socketIO.getOutput());
     }
-
 }
