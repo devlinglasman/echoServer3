@@ -9,7 +9,7 @@ public class MessageListener implements Runnable {
     private boolean stop;
 
     public MessageListener(InputStream inputStream, PrintStream output) {
-        this.reader = new BufferedReader(new InputStreamReader(inputStream));
+        reader = new BufferedReader(new InputStreamReader(inputStream));
         this.output = output;
         stop = false;
     }

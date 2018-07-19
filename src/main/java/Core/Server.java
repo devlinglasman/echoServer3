@@ -1,23 +1,24 @@
 package Core;
 
+import Core.Clients.ClientConnections;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Server {
 
     private PrintStream stdOut;
     private ServerSocket serverSocket;
-    private List<Socket> clients;
+    private ClientConnections clientConnections;
     private ServerStatus serverStatus;
 
     public Server(PrintStream stdOut, ServerSocket serverSocket, ServerStatus serverStatus) {
         this.serverSocket = serverSocket;
         this.stdOut = stdOut;
         this.serverStatus = serverStatus;
-        clients = new ArrayList<>();
+        clientConnections = new ClientConnections(new ArrayList<>());
         start();
     }
 
@@ -29,7 +30,7 @@ public class Server {
 
                 ServerListener serverListener = new ServerListener(this, clientSocket);
                 new Thread(serverListener).start();
-                clients.add(clientSocket);
+//                clientConnections.add(clientSocket);
             }
 
         } catch (IOException e) {

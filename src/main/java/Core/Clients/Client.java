@@ -5,23 +5,25 @@ import java.net.Socket;
 
 public class Client {
 
-    private Socket socket;
+    private Socket socketToServer;
     private BufferedReader stdInReader;
     private PrintStream stdOut;
     private PrintStream dataSentToSocketPrinter;
     private MessageListener messageListener;
 
-    public Client(InputStream stdIn, PrintStream stdOut, Socket socket) throws IOException {
+    private Socket socketFromServer;
+
+    public Client(InputStream stdIn, PrintStream stdOut, Socket socketToServer) throws IOException {
         stdInReader = new BufferedReader(new InputStreamReader(stdIn));
         this.stdOut = stdOut;
-        dataSentToSocketPrinter = new PrintStream(socket.getOutputStream());
-        this.socket = socket;
+        dataSentToSocketPrinter = new PrintStream(socketToServer.getOutputStream());
+        this.socketToServer = socketToServer;
         startListening();
         startEchoing();
     }
 
     private void startListening() throws IOException {
-        messageListener = new MessageListener(socket.getInputStream(),
+        messageListener = new MessageListener(socketToServer.getInputStream(),
                 new PrintStream(stdOut));
         new Thread(messageListener).start();
     }
@@ -43,8 +45,16 @@ public class Client {
         }
     }
 
-    public Socket getSocket() {
-        return socket;
+    public void addSocketFromServer(Socket socketFromServer) {
+        this.socketFromServer = socketFromServer;
+    }
+
+    public Socket getSocketToServer() {
+        return socketToServer;
+    }
+
+    public Socket getSocketFromServer() {
+        return socketFromServer;
     }
 
 }
