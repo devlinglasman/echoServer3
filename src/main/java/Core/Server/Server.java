@@ -1,6 +1,7 @@
-package Core;
+package Core.Server;
 
 import Core.Clients.ClientConnections;
+import Core.Message;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -11,6 +12,7 @@ public class Server {
 
     private PrintStream stdOut;
     private ServerSocket serverSocket;
+
     private ClientConnections clientConnections;
     private ServerStatus serverStatus;
 
@@ -25,17 +27,24 @@ public class Server {
     public void start() {
         try {
             while (serverStatus.isRunning()) {
-                Socket clientSocket = serverSocket.accept();
+                Socket clientConnection = serverSocket.accept();
+                clientConnections.add(clientConnection);
+
                 stdOut.println(Message.clientConnected());
 
-                ServerListener serverListener = new ServerListener(this, clientSocket);
-                new Thread(serverListener).start();
-//                clientConnections.add(clientSocket);
+                EachClientConnectionThread EachClientConnectionThread =
+                        new EachClientConnectionThread(clientConnections, clientConnection);
+                new Thread(EachClientConnectionThread).start();
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public ClientConnections getClientConnections() {
+        return clientConnections;
+    }
+
 
 }

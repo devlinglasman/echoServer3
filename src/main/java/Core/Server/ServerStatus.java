@@ -1,4 +1,4 @@
-package Core;
+package Core.Server;
 
 public class ServerStatus {
 

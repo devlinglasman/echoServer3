@@ -2,7 +2,7 @@ package Core.Servers;
 
 import Core.IOHelper;
 import Core.Message;
-import Core.Server;
+import Core.Server.Server;
 import Core.SocketStub;
 import org.junit.Test;
 
@@ -70,7 +70,7 @@ public class ServerTest {
 //
 //        ServerSocket serverSocketStub = new ServerSocketStub(clientSockets);
 //        Core.IOHelper stdIO = new Core.IOHelper("");
-//        new Core.Server(stdIO.getOut(), serverSocketStub);
+//        new Core.Server.Server(stdIO.getOut(), serverSocketStub);
 //        new Server(stdIOclient1.getOut(), serverSocketStub, new ServerStatusStub(1));
 //
 //        assertEquals(Core.Message.clientConnected() + "\n"

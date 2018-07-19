@@ -1,7 +1,7 @@
 package Core.Mains;
 
-import Core.Server;
-import Core.ServerStatus;
+import Core.Server.Server;
+import Core.Server.ServerStatus;
 
 import java.io.*;
 import java.net.ServerSocket;

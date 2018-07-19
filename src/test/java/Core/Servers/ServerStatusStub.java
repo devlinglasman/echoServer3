@@ -1,7 +1,6 @@
 package Core.Servers;
 
-import Core.Server;
-import Core.ServerStatus;
+import Core.Server.ServerStatus;
 
 public class ServerStatusStub extends ServerStatus {
 

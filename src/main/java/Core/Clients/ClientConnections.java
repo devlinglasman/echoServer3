@@ -15,6 +15,10 @@ public class ClientConnections {
         this.clientConnections = clientConnections;
     }
 
+    public void add(Socket socket) {
+        clientConnections.add(socket);
+    }
+
     public void broadcast(String message) throws IOException {
         for (Socket clientConnection : clientConnections) {
             new PrintStream(clientConnection.getOutputStream())
