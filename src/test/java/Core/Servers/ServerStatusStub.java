@@ -1,7 +1,5 @@
 package Core.Servers;
 
-import Core.Server.ServerStatus;
-
 public class ServerStatusStub extends ServerStatus {
 
     private int numberOfClients;

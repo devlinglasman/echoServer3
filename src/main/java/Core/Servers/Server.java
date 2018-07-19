@@ -1,4 +1,4 @@
-package Core.Server;
+package Core.Servers;
 
 import Core.Clients.ClientConnections;
 import Core.Message;
@@ -7,19 +7,21 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 public class Server {
 
     private PrintStream stdOut;
     private ServerSocket serverSocket;
-
     private ClientConnections clientConnections;
     private ServerStatus serverStatus;
+    private Executor executor;
 
-    public Server(PrintStream stdOut, ServerSocket serverSocket, ServerStatus serverStatus) {
+    public Server(PrintStream stdOut, ServerSocket serverSocket, ServerStatus serverStatus, Executor executor) {
         this.serverSocket = serverSocket;
         this.stdOut = stdOut;
         this.serverStatus = serverStatus;
+        this.executor = executor;
         clientConnections = new ClientConnections(new ArrayList<>());
         start();
     }
@@ -32,19 +34,12 @@ public class Server {
 
                 stdOut.println(Message.clientConnected());
 
-                EachClientConnectionThread EachClientConnectionThread =
-                        new EachClientConnectionThread(clientConnections, clientConnection);
-                new Thread(EachClientConnectionThread).start();
+                executor.execute(new EachClientConnectionThread(clientConnections, clientConnection));
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    public ClientConnections getClientConnections() {
-        return clientConnections;
-    }
-
 
 }

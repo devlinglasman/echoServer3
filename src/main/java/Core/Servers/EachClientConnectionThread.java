@@ -1,4 +1,4 @@
-package Core.Server;
+package Core.Servers;
 
 import Core.Clients.ClientConnections;
 

@@ -11,8 +11,6 @@ public class Client {
     private PrintStream dataSentToSocketPrinter;
     private MessageListener messageListener;
 
-    private Socket socketFromServer;
-
     public Client(InputStream stdIn, PrintStream stdOut, Socket socketToServer) throws IOException {
         stdInReader = new BufferedReader(new InputStreamReader(stdIn));
         this.stdOut = stdOut;
@@ -43,18 +41,6 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void addSocketFromServer(Socket socketFromServer) {
-        this.socketFromServer = socketFromServer;
-    }
-
-    public Socket getSocketToServer() {
-        return socketToServer;
-    }
-
-    public Socket getSocketFromServer() {
-        return socketFromServer;
     }
 
 }
