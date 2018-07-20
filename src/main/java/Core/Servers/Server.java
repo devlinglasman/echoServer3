@@ -34,7 +34,7 @@ public class Server {
 
                 stdOut.println(Message.clientConnected());
 
-                executor.execute(new EachClientConnectionThread(clientConnections, clientConnection));
+                executor.execute(new Broadcaster(clientConnections, clientConnection));
             }
 
         } catch (IOException e) {

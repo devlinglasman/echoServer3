@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class EachClientConnectionThread implements Runnable {
+public class Broadcaster implements Runnable {
 
     private ClientConnections clientConnections;
     private BufferedReader reader;
 
-    public EachClientConnectionThread(ClientConnections clientConnections, Socket clientConnection) throws IOException {
+    public Broadcaster(ClientConnections clientConnections, Socket clientConnection) throws IOException {
         this.clientConnections = clientConnections;
         reader = new BufferedReader(new InputStreamReader(clientConnection.getInputStream()));
     }

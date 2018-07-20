@@ -2,38 +2,44 @@ package Core.Clients;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.Executor;
 
 public class Client {
 
-    private Socket socketToServer;
     private BufferedReader stdInReader;
     private PrintStream stdOut;
-    private PrintStream dataSentToSocketPrinter;
-    private MessageListener messageListener;
+    private BufferedReader socketReader;
+    private PrintStream socketOut;
+    private MessageEchoer messageEchoer;
+    private Executor executor;
 
-    public Client(InputStream stdIn, PrintStream stdOut, Socket socketToServer) throws IOException {
+    public Client(InputStream stdIn, PrintStream stdOut, Socket socketToServer, Executor executor) throws IOException {
         stdInReader = new BufferedReader(new InputStreamReader(stdIn));
         this.stdOut = stdOut;
-        dataSentToSocketPrinter = new PrintStream(socketToServer.getOutputStream());
-        this.socketToServer = socketToServer;
+        socketReader = new BufferedReader(new InputStreamReader(socketToServer.getInputStream()));
+        socketOut = new PrintStream(socketToServer.getOutputStream());
+        this.executor = executor;
+        go();
+    }
+
+
+    public void go() {
         startListening();
         startEchoing();
     }
 
-    private void startListening() throws IOException {
-        messageListener = new MessageListener(socketToServer.getInputStream(),
-                new PrintStream(stdOut));
-        new Thread(messageListener).start();
+    private void startListening() {
+        executor.execute(new MessageEchoer(socketReader, stdOut));
     }
 
     public void startEchoing() {
         try {
             String message;
             while ((message = stdInReader.readLine()) != null) {
-                dataSentToSocketPrinter.println(message);
+                socketOut.println(message);
 
                 if (message.equals("bye")) {
-                    messageListener.stopRunning();
+                    messageEchoer.stopRunning();
                     break;
                 }
             }

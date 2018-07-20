@@ -28,10 +28,10 @@ public class eachClientConnectionThreadTest {
         List<Socket> clientList = Arrays.asList(clientSocketOne, clientSocketTwo);
         ClientConnections clientConnections = new ClientConnections(clientList);
 
-        EachClientConnectionThread eachClientConnectionThread =
-                new EachClientConnectionThread(clientConnections, clientSocketOne);
+        Broadcaster broadcaster =
+                new Broadcaster(clientConnections, clientSocketOne);
 
-        eachClientConnectionThread.run();
+        broadcaster.run();
 
         assertEquals(Message.echoIntro + helloWorld, socketIOOne.getOutput());
         assertEquals(Message.echoIntro + helloWorld, socketIOTwo.getOutput());
