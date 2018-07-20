@@ -28,7 +28,9 @@ public class ServerTest {
         ServerSocket serverSocketStub = new ServerSocketStub(Arrays.asList(clientSocket1, clientSocket2));
         Executor executor = new SynchronousExecutor();
 
-        new Server(stdIO.getOut(), serverSocketStub, new ServerStatusStub(2), executor);
+        Server server = new Server(stdIO.getOut(), serverSocketStub, new ServerStatusStub(2), executor);
+
+        server.start();
 
         assertEquals(Message.clientConnected() + "\n"
                 + Message.clientConnected() + "\n", stdIO.getOutput());
@@ -43,7 +45,9 @@ public class ServerTest {
         ServerSocket serverSocketStub = new ServerSocketStub(Arrays.asList(clientSocket));
         Executor executor = new SynchronousExecutor();
 
-        new Server(stdIO.getOut(), serverSocketStub, new ServerStatusStub(1), executor);
+        Server server = new Server(stdIO.getOut(), serverSocketStub, new ServerStatusStub(1), executor);
+
+        server.start();
 
         assertEquals(Message.echoIntro + helloWorld, socketIOclient.getOutput());
     }

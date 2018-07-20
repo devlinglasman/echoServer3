@@ -23,7 +23,6 @@ public class Server {
         this.serverStatus = serverStatus;
         this.executor = executor;
         clientConnections = new ClientConnections(new ArrayList<>());
-        start();
     }
 
     public void start() {

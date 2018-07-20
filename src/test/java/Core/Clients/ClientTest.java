@@ -17,15 +17,28 @@ public class ClientTest {
     private final String helloWorld = "Hello world!\n";
 
     @Test
-    public void writeMessageFromSocketToTerminal() throws IOException {
+    public void echoMessageFromServer() throws IOException {
         IOHelper stdIO = new IOHelper("");
         IOHelper socketIO = new IOHelper(helloWorld);
 
         SocketStub socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
-        Executor executor = new SynchronousExecutor();
-        new Client(stdIO.getIn(), stdIO.getOut(), socketStub, executor);
+        Client client = new Client(stdIO.getIn(), stdIO.getOut(), socketStub, new SynchronousExecutor());
+
+        client.go();
 
         assertEquals(helloWorld, stdIO.getOutput());
     }
 
+    @Test
+    public void sendMessageFromTerminalToServer() throws IOException {
+        IOHelper stdIO = new IOHelper(helloWorld);
+        IOHelper socketIO = new IOHelper("");
+
+        SocketStub socketStub = new SocketStub(socketIO.getIn(), socketIO.getOut());
+        Client client = new Client(stdIO.getIn(), stdIO.getOut(), socketStub, new SynchronousExecutor());
+
+        client.go();
+
+        assertEquals(helloWorld, socketIO.getOutput());
+    }
 }

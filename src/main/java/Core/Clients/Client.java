@@ -10,7 +10,6 @@ public class Client {
     private PrintStream stdOut;
     private BufferedReader socketReader;
     private PrintStream socketOut;
-    private MessageEchoer messageEchoer;
     private Executor executor;
 
     public Client(InputStream stdIn, PrintStream stdOut, Socket socketToServer, Executor executor) throws IOException {
@@ -19,34 +18,19 @@ public class Client {
         socketReader = new BufferedReader(new InputStreamReader(socketToServer.getInputStream()));
         socketOut = new PrintStream(socketToServer.getOutputStream());
         this.executor = executor;
-        go();
     }
-
 
     public void go() {
-        startListening();
-        startEchoing();
+        echoServerMessages();
+        sendOwnMessages();
     }
 
-    private void startListening() {
+    private void echoServerMessages() {
         executor.execute(new MessageEchoer(socketReader, stdOut));
     }
 
-    public void startEchoing() {
-        try {
-            String message;
-            while ((message = stdInReader.readLine()) != null) {
-                socketOut.println(message);
-
-                if (message.equals("bye")) {
-                    messageEchoer.stopRunning();
-                    break;
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void sendOwnMessages() {
+        executor.execute(new MessageEchoer(stdInReader, socketOut));
     }
 
 }
