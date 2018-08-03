@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Core.Servers.ServerStatusStubTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2018-07-23T10:56:33" hostname="Chriss-MBP.localdomain" time="0.001">
+  <properties/>
+  <testcase name="oneClientOneLoop" classname="Core.Servers.ServerStatusStubTest" time="0.001"/>
+  <testcase name="oneClientTwoLoops" classname="Core.Servers.ServerStatusStubTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

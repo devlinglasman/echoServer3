@@ -7,28 +7,36 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class Broadcaster implements Runnable {
+public class ClientMessageBroadcaster implements Runnable {
 
     private ClientConnections clientConnections;
     private BufferedReader reader;
 
-    public Broadcaster(ClientConnections clientConnections, Socket clientConnection) throws IOException {
+    public ClientMessageBroadcaster(ClientConnections clientConnections, Socket clientConnection) throws IOException {
         this.clientConnections = clientConnections;
         reader = new BufferedReader(new InputStreamReader(clientConnection.getInputStream()));
     }
 
     public void run() {
         try {
-            listenAndBroadcast();
+            while (true) {
+                execute(reader.readLine());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void listenAndBroadcast() throws IOException {
-        String message;
-        while ((message = reader.readLine()) != null) {
+    private void execute(String message) {
+            broadcast(message);
+    }
+
+    private void broadcast(String message) {
+        try {
             clientConnections.broadcast(message);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
 }

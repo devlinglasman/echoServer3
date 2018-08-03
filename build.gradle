@@ -1,6 +1,5 @@
-plugins {
-    id 'java'
-}
+apply plugin: 'java'
+apply plugin: 'application'
 
 version '1.0-SNAPSHOT'
 
@@ -13,3 +12,11 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Core/Mains/MainServer'
+    }
+}
+
+mainClassName = 'Core/Mains/MainServer'

@@ -33,7 +33,7 @@ public class Server {
 
                 stdOut.println(Message.clientConnected());
 
-                executor.execute(new Broadcaster(clientConnections, clientConnection));
+                executor.execute(new ClientMessageBroadcaster(clientConnections, clientConnection));
             }
 
         } catch (IOException e) {

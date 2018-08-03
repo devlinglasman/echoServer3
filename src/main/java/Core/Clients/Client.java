@@ -8,29 +8,37 @@ public class Client {
 
     private BufferedReader stdInReader;
     private PrintStream stdOut;
-    private BufferedReader socketReader;
-    private PrintStream socketOut;
     private Executor executor;
+    private Socket socketToServer;
 
-    public Client(InputStream stdIn, PrintStream stdOut, Socket socketToServer, Executor executor) throws IOException {
+    public Client(InputStream stdIn, PrintStream stdOut, Socket socketToServer, Executor executor) {
+        this.socketToServer = socketToServer;
         stdInReader = new BufferedReader(new InputStreamReader(stdIn));
         this.stdOut = stdOut;
-        socketReader = new BufferedReader(new InputStreamReader(socketToServer.getInputStream()));
-        socketOut = new PrintStream(socketToServer.getOutputStream());
         this.executor = executor;
     }
 
-    public void go() {
+    public void start() {
         echoServerMessages();
         sendOwnMessages();
     }
 
     private void echoServerMessages() {
-        executor.execute(new MessageEchoer(socketReader, stdOut));
+        try {
+            executor.execute(new ServerMessageEchoer(new BufferedReader(new InputStreamReader
+                    (socketToServer.getInputStream())), stdOut));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendOwnMessages() {
-        executor.execute(new MessageEchoer(stdInReader, socketOut));
+        try {
+            executor.execute(new ClientProtocol(stdInReader,
+                    new PrintStream(socketToServer.getOutputStream())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
